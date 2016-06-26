@@ -9,7 +9,7 @@ const baseCfg = {
 
   output: {
     path: config.assetsPath,
-    filename: "[name].js",
+    filename: "js/[name].js",
     publicPath: '/static/'
   },
   

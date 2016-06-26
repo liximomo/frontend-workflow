@@ -1,6 +1,9 @@
 const path = require('path');
 const AssetsPlugin = require('assets-webpack-plugin');
 //const PathRewriterPlugin = require('webpack-path-rewriter');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const autoprefixer = require('autoprefixer');
+
 const webpack = require('webpack');
 
 const config = require('./config');
@@ -10,7 +13,7 @@ const baseCfg = {
 
   output: {
     path: config.assetsPath,
-    filename: "[name]_[hash].js",
+    filename: "js/[name]_[chunkhash].js",
     publicPath: '/static/'
   },
   
@@ -58,6 +61,7 @@ const baseCfg = {
     //   pathReplacer: '[1]="[path]"',
     //   includeHash: true,
     // }),
+    new ExtractTextPlugin("css/[name]_[contenthash].css"),
     new AssetsPlugin({
       filename: 'assetsMap.json',
       prettyPrint: true

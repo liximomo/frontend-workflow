@@ -24,7 +24,13 @@ const app = new Express();
 const compiler = webpack(config);
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
+  compiler.run(function(err, stats) {
+    if(err) throw new Error("webpack", err);
+    console.log("[webpack]", stats.toString({
+      colors: true
+    }));
+  });
+  //app.use(webpackDevMiddleware(compiler, { noInfo: false, publicPath: config.output.publicPath }));
 } else {
   app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
   app.use(webpackHotMiddleware(compiler));

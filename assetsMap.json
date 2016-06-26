@@ -1,8 +1,0 @@
-{
-  "testb": {
-    "js": "/static/testb.js"
-  },
-  "test": {
-    "js": "/static/test.js"
-  }
-}
