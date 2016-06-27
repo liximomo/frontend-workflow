@@ -2,6 +2,7 @@ const Express = require('express');
 const path = require('path');
 const webpack = require('webpack');
 const config = require('../config');
+const varConfig = require('../config/config');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 // Initialize the Express App
@@ -21,7 +22,18 @@ const app = new Express();
 // };
 
 // export default startApp;
-const compiler = webpack(config);
+
+// parse command line params
+
+let entryNames = null;
+let params = process.argv.slice(2);
+if (params.length > 0) {
+  entryNames = params;
+}
+
+const webpackConfig = config(entryNames);
+
+const compiler = webpack(webpackConfig);
 
 if (process.env.NODE_ENV === 'production') {
   compiler.run(function(err, stats) {
@@ -30,9 +42,10 @@ if (process.env.NODE_ENV === 'production') {
       colors: true
     }));
   });
-  //app.use(webpackDevMiddleware(compiler, { noInfo: false, publicPath: config.output.publicPath }));
+  console.log()
+  app.use(webpackConfig.output.publicPath, Express.static(varConfig.assetsPath));
 } else {
-  app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
+  app.use(webpackDevMiddleware(compiler, { noInfo: false, publicPath: webpackConfig.output.publicPath }));
   app.use(webpackHotMiddleware(compiler));
 }
 

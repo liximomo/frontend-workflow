@@ -1,6 +1,6 @@
 const path = require('path');
 const AssetsPlugin = require('assets-webpack-plugin');
-//const PathRewriterPlugin = require('webpack-path-rewriter');
+const PathRewriterPlugin = require('webpack-path-rewriter');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const autoprefixer = require('autoprefixer');
 
@@ -21,12 +21,22 @@ const baseCfg = {
     loaders: [
       {
         test: /\.js?$/,
-        include: /src/,
+        include:[
+          config.srcPath,
+          config.modulePath
+        ],
         loader: 'babel'
       },
       {
         test:   /\.s?css$/,
         loader: ExtractTextPlugin.extract('style-loader', 'css-loader!postcss-loader!sass-loader')
+      },
+       {
+        test: /\.html$/,
+        loader: PathRewriterPlugin.rewriteAndEmit({
+          name: '[path][name].html',
+          context: config.srcPath
+        })
       }
     ]
   },
@@ -40,7 +50,7 @@ const baseCfg = {
 
   sassLoader: {
     includePaths: [
-      //path.resolve(__dirname, "./node_modules/bootstrap-sass/assets/stylesheets")
+      config.modulePath
     ]
   },
 
@@ -55,12 +65,12 @@ const baseCfg = {
       }
     }),
     new webpack.optimize.OccurenceOrderPlugin(),
-    // new PathRewriterPlugin({
-    //   pathRegExp: /(src|href)\s*=\s*"(.*?\.[\w\d]{1,6})"/,
-    //   pathMatchIndex: 2,
-    //   pathReplacer: '[1]="[path]"',
-    //   includeHash: true,
-    // }),
+    new PathRewriterPlugin({
+      pathRegExp: /(<script|<link)(.*?)data-rewrite\s*=\s*"(.*?\.[\w\d]{1,6})"(.*?)(src|href)\s*=\s*"(.*?\.[\w\d]{1,6})"/,
+      pathMatchIndex: 3,
+      pathReplacer: '[1][2][4][5]="[path]"',
+      includeHash: true,
+    }),
     new ExtractTextPlugin("css/[name]_[contenthash].css"),
     new AssetsPlugin({
       filename: 'assetsMap.json',

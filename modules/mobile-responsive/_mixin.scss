@@ -1,0 +1,39 @@
+$fontSizeStandard: 20 * ($pegeWidth / 320);
+
+@function strip-unit($number) {
+  @return $number / ($number * 0 + 1);
+}
+
+@function rem($pixels, $context: $fontSizeStandard) {
+  @if (unitless($pixels)) {
+    $pixels: $pixels * 1px;
+  }
+
+  @if (unitless($context)) {
+    $context: $context * 1px;
+  }
+  @return ($pixels / $context) * 1rem;
+}
+
+@mixin remify($property, $values...) {
+  $max: length($values);
+  $remValues: "";
+
+  @for $i from 1 through $max {
+    $item: nth($values, $i);
+    $value: $item;
+
+    @if type-of($item) == "number" and unit($item) == "px" {
+      $value: rem($value);
+    }
+
+    $remValues: #{$remValues + $value};
+
+    @if $i < $max {
+      $remValues: #{$remValues + " "};
+    }
+  } 
+
+  #{$property}: $values;
+  #{$property}: $remValues; 
+}

@@ -1,0 +1,24 @@
+
+// 设计稿宽度 单位 px
+$pegeWidth: 640;
+
+/** 
+ * 
+ * 使用：
+ * 所有的单位都使用 rem(px数值) 的方式
+ * 例如 width: 640px; => width: rem(640); 或 width: rem(640px);
+ *
+ */
+
+
+
+
+@import 'mobile-responsive/mixin';
+
+// other import
+// @import 'style.scss'
+// 
+body {
+  background: red;
+  width: rem(640);
+}

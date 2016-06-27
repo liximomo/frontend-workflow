@@ -13,17 +13,25 @@ if (process.env.NODE_ENV === 'production') {
   inculdes = ['webpack-hot-middleware/client?reload=true'];
 }
 
-const entryFiles = glob.sync(`${config.srcPath}/**/*.entry.js`);
 
-const entry = entryFiles.reduce((entries, filePath) => {
-  const entryName = filePath.substring(
-    filePath.lastIndexOf(path.sep)+1, 
-    filePath.lastIndexOf('.') - '.entry'.length
-  );
-  entries[entryName] = inculdes.concat(filePath);
-  return entries;
-}, {});
 
-var webpackCfg = merge(cfg, { entry });
+module.exports = function webpackCfg(names = null) {
+  const globPattern = names 
+    ? `${config.srcPath}/**/+(${names.join('|')}).entry.js` 
+    : `${config.srcPath}/**/*.entry.js`;
 
-module.exports = webpackCfg;
+  const entryFiles = glob.sync(globPattern);
+
+  const entry = entryFiles.reduce((entries, filePath) => {
+    const entryName = filePath.substring(
+      filePath.lastIndexOf(path.sep)+1, 
+      filePath.lastIndexOf('.') - '.entry'.length
+    );
+    entries[entryName] = inculdes.concat(filePath);
+    return entries;
+  }, {});
+
+  const webpackCfg = merge(cfg, { entry });
+
+  return webpackCfg;
+};

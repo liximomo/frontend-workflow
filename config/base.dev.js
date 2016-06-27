@@ -17,7 +17,10 @@ const baseCfg = {
     loaders: [
       {
         test: /\.js?$/,
-        include: /src/,
+        include:[
+          config.srcPath,
+          config.modulePath
+        ],
         loader: 'babel'
       },
       {
@@ -26,7 +29,7 @@ const baseCfg = {
       },
       {
         test: /\.html$/,
-        loader: ''
+        loader: 'null-loader'
       }
     ]
   },
@@ -40,7 +43,7 @@ const baseCfg = {
 
   sassLoader: {
     includePaths: [
-      //path.resolve(__dirname, "./node_modules/bootstrap-sass/assets/stylesheets")
+      config.modulePath
     ]
   },
 

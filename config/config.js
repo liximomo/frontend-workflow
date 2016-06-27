@@ -7,5 +7,5 @@ module.exports = {
   srcPath: `${projectPath}/src`,
   assetsPath: `${projectPath}/static`,
   libPath: `${projectPath}/src/lib`,
-  modulePath: `${projectPath}/src/modules`,
+  modulePath: `${projectPath}/modules`,
 };
