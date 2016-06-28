@@ -93,7 +93,7 @@
 /***/ function(module, exports) {
 
 	
-	module.exports = "/static/mobileBoilerplate/index.html" // content hash: d484bdd53a2d686b4cf7278d538952bc
+	module.exports = "/static/mobileBoilerplate/index.html" // content hash: 2a69c6e7a6f0f97154240e07158c38d0
 
 /***/ }
 /******/ ]);
