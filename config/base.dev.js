@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const AssetsPlugin = require('assets-webpack-plugin');
+const AssetsPlugin = require('../modules/assets-webpack-plugin');
 
 const config = require('./config');
 
@@ -26,6 +26,13 @@ const baseCfg = {
       {
         test:   /\.s?css$/,
         loader: ('style-loader!css-loader!sass-loader')
+      },
+      { 
+        test: /\.(jpe?g|png|gif|svg)$/i, 
+        include:[
+          config.srcPath
+        ],
+        loader: `url?limit=10000&name=[path][name]_[hash].[ext]&context=${config.srcPath}` 
       },
       {
         test: /\.html$/,

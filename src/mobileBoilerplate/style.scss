@@ -18,7 +18,11 @@ $pegeWidth: 640;
 // other import
 // @import 'style.scss'
 // 
-body {
+.main {
   background: red;
+  background: url(img/show.jpg) no-repeat center / contain;
+
+  margin: auto;
   width: rem(640);
+  height: rem(640);
 }

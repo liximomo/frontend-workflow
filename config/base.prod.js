@@ -1,5 +1,5 @@
 const path = require('path');
-const AssetsPlugin = require('assets-webpack-plugin');
+const AssetsPlugin = require('../modules/assets-webpack-plugin');
 const PathRewriterPlugin = require('webpack-path-rewriter');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const autoprefixer = require('autoprefixer');
@@ -31,7 +31,14 @@ const baseCfg = {
         test:   /\.s?css$/,
         loader: ExtractTextPlugin.extract('style-loader', 'css-loader!postcss-loader!sass-loader')
       },
-       {
+      { 
+        test: /\.(jpe?g|png|gif|svg)$/i, 
+        include:[
+          config.srcPath
+        ],
+        loader: `url?limit=10000&name=[path][name]_[hash].[ext]&context=${config.srcPath}` 
+      },
+      {
         test: /\.html$/,
         loader: PathRewriterPlugin.rewriteAndEmit({
           name: '[path][name].html',
