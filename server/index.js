@@ -1,37 +1,32 @@
 const Express = require('express');
 const path = require('path');
 const webpack = require('webpack');
-const config = require('../config');
-const varConfig = require('../config/config');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
+const program = require('commander');
+
+const config = require('../config');
+const varConfig = require('../config/config');
+
 // Initialize the Express App
 const app = new Express();
 
-// var jsonServer = require('json-server')
-// var router = jsonServer.router('./mock/db.json');
-//var middlewares = jsonServer.defaults();
-//app.use(middlewares);
-//app.use('/api', router);
+// 处理命令行参数
+program
+  .version('0.0.1')
+  .usage('[options] [entry ...]')
+  .option('-t, --type <type>', 'select type', /^(bundle|lib)$/i, 'bundle')
+  .parse(process.argv);
 
-
-// function startApp(cb) {
-//   app.listen(8080, '0.0.0.0', (error) => {
-//     cb(error, 8080);
-//   });
-// };
-
-// export default startApp;
-
-// parse command line params
+// console.log("type: %j", program.type);
+// console.log('args: %j', program.args);
 
 let entryNames = null;
-let params = process.argv.slice(2);
-if (params.length > 0) {
-  entryNames = params;
+if (program.args.length > 0) {
+  entryNames = program.args;
 }
 
-const webpackConfig = config(entryNames);
+const webpackConfig = config(entryNames, program.type);
 
 const compiler = webpack(webpackConfig);
 
@@ -42,13 +37,13 @@ if (process.env.NODE_ENV === 'production') {
       colors: true
     }));
   });
-  console.log()
-  app.use(webpackConfig.output.publicPath, Express.static(varConfig.assetsPath));
+  //app.use(varConfig.publicPath, Express.static(varConfig.assetsPath));
 } else {
-  app.use(webpackDevMiddleware(compiler, { noInfo: false, publicPath: webpackConfig.output.publicPath }));
+  app.use(webpackDevMiddleware(compiler, { noInfo: false, publicPath: varConfig.publicPath }));
   app.use(webpackHotMiddleware(compiler));
 }
 
+app.use(varConfig.publicPath, Express.static(varConfig.assetsPath));
 app.use('/page', Express.static(path.resolve('src')));
 
 app.listen(8080, '0.0.0.0', (error) => {

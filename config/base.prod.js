@@ -17,6 +17,10 @@ const baseCfg = {
     publicPath: '/static/'
   },
   
+  externals: {
+    "jquery": "jQuery"
+  },
+
   module: {
     loaders: [
       {
@@ -29,7 +33,7 @@ const baseCfg = {
       },
       {
         test:   /\.s?css$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader!postcss-loader!sass-loader')
+        loader: ExtractTextPlugin.extract('style-loader', 'css-loader!postcss-loader!resolve-url!sass?sourceMap')
       },
       { 
         test: /\.(jpe?g|png|gif|svg)$/i, 
@@ -39,12 +43,17 @@ const baseCfg = {
         loader: `url?limit=10000&name=[path][name]_[hash].[ext]&context=${config.srcPath}` 
       },
       {
-        test: /\.html$/,
-        loader: PathRewriterPlugin.rewriteAndEmit({
-          name: '[path][name].html',
-          context: config.srcPath
-        })
+        test: /\.(eot|svg|ttf|woff|woff2)$/i,
+        include: /fonts/,
+        loader: 'file?name=fonts/[name].[ext]?[hash]' 
       }
+      // {
+      //   test: /\.html$/,
+      //   loader: PathRewriterPlugin.rewriteAndEmit({
+      //     name: '[path][name].html',
+      //     context: config.srcPath
+      //   })
+      // }
     ]
   },
 
@@ -57,7 +66,9 @@ const baseCfg = {
 
   sassLoader: {
     includePaths: [
-      config.modulePath
+      config.modulePath,
+      `${config.projectPath}/pageShare/style`,
+      `${config.projectPath}/node_modules/bootstrap-sass/assets/stylesheets`
     ]
   },
 
@@ -72,16 +83,22 @@ const baseCfg = {
       }
     }),
     new webpack.optimize.OccurenceOrderPlugin(),
-    new PathRewriterPlugin({
-      pathRegExp: /(<script|<link)(.*?)data-rewrite\s*=\s*"(.*?\.[\w\d]{1,6})"(.*?)(src|href)\s*=\s*"(.*?\.[\w\d]{1,6})"/,
-      pathMatchIndex: 3,
-      pathReplacer: '[1][2][4][5]="[path]"',
-      includeHash: true,
-    }),
-    new ExtractTextPlugin("css/[name]_[contenthash].css"),
+    // new PathRewriterPlugin({
+    //   pathRegExp: /(<script|<link)(.*?)data-rewrite\s*=\s*"(.*?\.[\w\d]{1,6})"(.*?)(src|href)\s*=\s*"(.*?\.[\w\d]{1,6})"/,
+    //   pathMatchIndex: 3,
+    //   pathReplacer: '[1][2][4][5]="[path]"',
+    //   includeHash: true,
+    // }),
+    new ExtractTextPlugin("css/[name].css"),
     new AssetsPlugin({
       filename: 'assetsMap.json',
       prettyPrint: true
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compressor: {
+        warnings: false,
+        //drop_console: true
+      }
     }),
   ]
 

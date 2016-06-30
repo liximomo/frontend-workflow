@@ -44,56 +44,27 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(2);
+	module.exports = __webpack_require__(3);
 
 
 /***/ },
-/* 1 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	(function (doc, win) {
-	  var docEle = doc.documentElement;
-	  var evt = "onorientationchange" in window ? "orientationchange" : "resize",
-	      fn = function fn() {
-	    var width = Math.max(docEle.clientWidth, window.innerWidth || 0);
-	    if (width) {
-	      width = Math.min(width, 640);
-	      docEle.style.fontSize = 20 * (width / 320) + "px";
-	    }
-	  };
-
-	  win.addEventListener(evt, fn, false);
-	  doc.addEventListener("DOMContentLoaded", fn, false);
-	})(document, window);
-
-/***/ },
-/* 2 */
+/* 1 */,
+/* 2 */,
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	__webpack_require__(3);
+	__webpack_require__(5);
 
-	__webpack_require__(4);
-
-	__webpack_require__(1);
-
-	console.log('hello word!'); // 导入 进入点的宿主 html 和 style 依赖
+	document.getElementById('test').innerHTML = 'testb';
 
 /***/ },
-/* 3 */
+/* 4 */,
+/* 5 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-	
-	module.exports = "/static/mobileBoilerplate/index.html" // content hash: 2a69c6e7a6f0f97154240e07158c38d0
 
 /***/ }
 /******/ ]);

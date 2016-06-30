@@ -6,6 +6,7 @@ module.exports = {
   projectPath,
   srcPath: `${projectPath}/src`,
   assetsPath: `${projectPath}/static`,
-  libPath: `${projectPath}/src/lib`,
+  libPath: `${projectPath}/static/lib`,
   modulePath: `${projectPath}/modules`,
+  publicPath: '/static/'
 };

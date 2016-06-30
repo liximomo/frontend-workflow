@@ -13,6 +13,10 @@ const baseCfg = {
     publicPath: '/static/'
   },
   
+  externals: {
+    "jquery": "jQuery"
+  },
+  
   module: {
     loaders: [
       {
@@ -25,7 +29,7 @@ const baseCfg = {
       },
       {
         test:   /\.s?css$/,
-        loader: ('style-loader!css-loader!sass-loader')
+        loader: ('style-loader!css-loader!resolve-url!sass?sourceMap')
       },
       { 
         test: /\.(jpe?g|png|gif|svg)$/i, 
@@ -35,9 +39,14 @@ const baseCfg = {
         loader: `url?limit=10000&name=[path][name]_[hash].[ext]&context=${config.srcPath}` 
       },
       {
-        test: /\.html$/,
-        loader: 'null-loader'
+        test: /\.(eot|svg|ttf|woff|woff2)$/i,
+        include: /fonts/,
+        loader: 'file?name=fonts/[name].[ext]?[hash]' 
       }
+      // {
+      //   test: /\.html$/,
+      //   loader: 'null-loader'
+      // }
     ]
   },
 
@@ -50,7 +59,9 @@ const baseCfg = {
 
   sassLoader: {
     includePaths: [
-      config.modulePath
+      config.modulePath,
+      `${config.projectPath}/pageShare/style`,
+      `${config.projectPath}/node_modules/bootstrap-sass/assets/stylesheets`
     ]
   },
 
