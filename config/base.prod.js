@@ -13,7 +13,8 @@ const baseCfg = {
 
   output: {
     path: config.assetsPath,
-    filename: "js/[name]_[chunkhash].js",
+    //filename: "js/[name]_[chunkhash].js",
+    filename: "js/[name].js",
     publicPath: '/static/'
   },
   
@@ -35,17 +36,18 @@ const baseCfg = {
         test:   /\.s?css$/,
         loader: ExtractTextPlugin.extract('style-loader', 'css-loader!postcss-loader!resolve-url!sass?sourceMap')
       },
-      { 
-        test: /\.(jpe?g|png|gif|svg)$/i, 
-        include:[
-          config.srcPath
-        ],
-        loader: `url?limit=10000&name=[path][name]_[hash].[ext]&context=${config.srcPath}` 
-      },
+      // { 
+      //   test: /\.(jpe?g|png|gif|svg)$/i,
+      //   exclude: /fonts/,
+      //   include:[
+      //     config.srcPath
+      //   ],
+      //   loader: `url?limit=10000&name=[path][name].[ext]&context=${config.srcPath}` 
+      // },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/i,
         include: /fonts/,
-        loader: 'file?name=fonts/[name].[ext]?[hash]' 
+        loader: 'file?name=fonts/[name].[ext]'
       }
       // {
       //   test: /\.html$/,
@@ -92,7 +94,8 @@ const baseCfg = {
     new ExtractTextPlugin("css/[name].css"),
     new AssetsPlugin({
       filename: 'assetsMap.json',
-      prettyPrint: true
+      prettyPrint: true,
+      update: true
     }),
     new webpack.optimize.UglifyJsPlugin({
       compressor: {

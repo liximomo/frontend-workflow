@@ -32,16 +32,17 @@ const baseCfg = {
         loader: ('style-loader!css-loader!resolve-url!sass?sourceMap')
       },
       { 
-        test: /\.(jpe?g|png|gif|svg)$/i, 
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        exclude: /fonts/,
         include:[
           config.srcPath
         ],
-        loader: `url?limit=10000&name=[path][name]_[hash].[ext]&context=${config.srcPath}` 
+        loader: `url?limit=10000&name=[path][name].[ext]&context=${config.srcPath}` 
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/i,
         include: /fonts/,
-        loader: 'file?name=fonts/[name].[ext]?[hash]' 
+        loader: 'file?name=fonts/[name].[ext]' 
       }
       // {
       //   test: /\.html$/,

@@ -41,8 +41,10 @@ function genConfig(custom) {
   return assign({}, cfg, custom);
 }
 
-function getLibConfig() {
-  const globPattern = `${config.srcPath}/**/*.lib.js`;
+function getLibConfig(names) {
+  const globPattern = names 
+    ? `${config.srcPath}/**/+(${names.join('|')}).lib.js` 
+    : `${config.srcPath}/**/*.lib.js`;
 
   const entry = getEntry(globPattern);
   return Object.keys(entry).reduce((cfgs, key) => {
@@ -50,7 +52,7 @@ function getLibConfig() {
       path: config.libPath,
       libraryTarget: 'var',
       filename: "[name].js",
-      chunkFilename: '[name]_[chunkhash].chunk.js'
+      chunkFilename: '[name].chunk.js?[chunkhash]'
     }
     // 大写字母开头，有输出模块
     if (key[0] === key[0].toUpperCase()) {
@@ -74,22 +76,30 @@ function getLibConfig() {
 }
 
 
-function getScssConfig() {
-  const scssGlob = `${config.srcPath}/**/*.entry.scss`;
+function getScssConfig(names) {
+  const scssGlob = names 
+    ? `${config.srcPath}/**/+(${names.join('|')}).entry.scss` 
+    : `${config.srcPath}/**/*.entry.scss`;
   const entry = getEntry(scssGlob);
   return Object.keys(entry).reduce((cfgs, key) => {
-    cfgs.push(genConfig({
-      entry: {
-        [key]: entry[key]
-      },
-      output: {
-        path: config.assetsPath,
-        filename: "_temp/[id].scss.js",
-        publicPath: config.publicPath
-      },
-    }));
+    cfgs.push(assign(
+      {},
+      require('./base.scss'),
+      {
+        entry: {
+          [key]: entry[key]
+        }
+      }
+    ));
     return cfgs;
   }, []);
+}
+
+function getJsConfig(names) {
+   const globPattern = names 
+    ? `${config.srcPath}/**/+(${names.join('|')}).entry.js` 
+    : `${config.srcPath}/**/*.entry.js`;
+    return getConfig(getEntry(globPattern));
 }
 
 function getConfig(entry) {
@@ -155,20 +165,18 @@ function isFileExist(filepath) {
   return isExist;
 }
 
-module.exports = function webpackCfg(names = null, type) {
-  const globPattern = names 
-    ? `${config.srcPath}/**/+(${names.join('|')}).entry.js` 
-    : `${config.srcPath}/**/*.entry.js`;
+const typeMap = {
+  'scss': getScssConfig,
+  'js': getJsConfig,
+  'lib': getLibConfig
+};
 
-  let cfgs = [];
-  switch (type) {
-    case 'bundle':
-      cfgs = [...getScssConfig(), ...getConfig(getEntry(globPattern))];
-      break;
-    case 'lib':
-      cfgs = getLibConfig();
-      break;
-  }
- 
+module.exports = function webpackCfg(names = null, types) {
+  const _types = types.length ? types : ['js'];
+
+  let cfgs = _types.reduce((cfgs, type) => {
+    console.log('type: ', type, 'names: ', names);
+    return cfgs.concat(typeMap[type](names));
+  }, []);
   return cfgs;
 };

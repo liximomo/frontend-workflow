@@ -11,14 +11,21 @@ const varConfig = require('../config/config');
 // Initialize the Express App
 const app = new Express();
 
+function collect(val, memo) {
+  if (!/^(js|lib|scss)$/i.test(val)) {
+    throw new Error('params must be one of [js lib scss]');
+  }
+  memo.push(val);
+  return memo;
+}
+
 // 处理命令行参数
 program
   .version('0.0.1')
   .usage('[options] [entry ...]')
-  .option('-t, --type <type>', 'select type', /^(bundle|lib)$/i, 'bundle')
+  .option('-t, --type <type>', 'select type', collect, [])
   .parse(process.argv);
 
-// console.log("type: %j", program.type);
 // console.log('args: %j', program.args);
 
 let entryNames = null;
