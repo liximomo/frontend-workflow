@@ -8,6 +8,9 @@ const program = require('commander');
 const config = require('../config');
 const varConfig = require('../config/config');
 
+const clearAssets = require('./tools/clearAssets');
+clearAssets(path.join(varConfig.projectPath, 'assetsMap.json'));
+
 // Initialize the Express App
 const app = new Express();
 

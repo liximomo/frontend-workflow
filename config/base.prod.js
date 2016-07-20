@@ -36,14 +36,14 @@ const baseCfg = {
         test:   /\.s?css$/,
         loader: ExtractTextPlugin.extract('style-loader', 'css-loader!postcss-loader!resolve-url!sass?sourceMap')
       },
-      // { 
-      //   test: /\.(jpe?g|png|gif|svg)$/i,
-      //   exclude: /fonts/,
-      //   include:[
-      //     config.srcPath
-      //   ],
-      //   loader: `url?limit=10000&name=[path][name].[ext]&context=${config.srcPath}` 
-      // },
+      { 
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        exclude: /fonts/,
+        include:[
+          config.srcPath
+        ],
+        loader: `url?limit=10000&name=[path][name].[ext]&context=${config.srcPath}` 
+      },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/i,
         include: /fonts/,
